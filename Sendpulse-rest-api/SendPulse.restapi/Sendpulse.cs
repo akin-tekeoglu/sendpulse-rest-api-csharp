@@ -9,7 +9,7 @@ using System.Web;
 
 namespace Sendpulse_rest_api.restapi
 {
-    class Sendpulse : SendpulseInterface
+    public class Sendpulse : SendpulseInterface
     {
         private string apiurl = "https://api.sendpulse.com";
         private string userId = null;
