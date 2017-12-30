@@ -9,7 +9,8 @@ using System.Text;
 
 namespace Sendpulse_rest_api
 {
-    class Examples {
+    class Examples
+    {
         //https://login.sendpulse.com/settings/#api
         private static string userId = "";
         private static string secret = "";
@@ -39,19 +40,22 @@ namespace Sendpulse_rest_api
         /// </summary>
         /// <param name="sp"></param>
         /// <param name="BookId"></param>
-        static void getBookInfo(Sendpulse sp,int BookId)
+        static void getBookInfo(Sendpulse sp, int BookId)
         {
             Dictionary<string, object> result = sp.getBookInfo(BookId); //BOOKID
             Console.WriteLine("Response Status {0}", result["http_code"]);
             Console.WriteLine("Result {0}", result["data"]);
             Console.ReadKey();
         }
+
         /// <summary>
         /// Retrieving a list of emails from an address book
         /// </summary>
         /// <param name="sp"></param>
         /// <param name="BookId"></param>
-        static void getEmailsFromBook(Sendpulse sp, int BookId)
+        /// <param name="limit"></param>
+        /// <param name="offset"></param>
+        static void getEmailsFromBook(Sendpulse sp, int BookId, int limit, int offset)
         {
             Dictionary<string, object> result = sp.getBookInfo(BookId); //BOOKID
             Console.WriteLine("Response Status {0}", result["http_code"]);
@@ -76,7 +80,7 @@ namespace Sendpulse_rest_api
         /// <param name="sp"></param>
         static void createAddressBook(Sendpulse sp)
         {
-            Dictionary<string, object> result = sp.createAddressBook("NEW NAME"); 
+            Dictionary<string, object> result = sp.createAddressBook("NEW NAME");
             Console.WriteLine("Response Status {0}", result["http_code"]);
             Console.WriteLine("Result {0}", result["data"]);
             Console.ReadKey();
@@ -356,7 +360,7 @@ namespace Sendpulse_rest_api
             Console.WriteLine("Result {0}", result["data"]);
             Console.ReadKey();
         }
-        
+
         /// <summary>
         /// Sending email via SendPulse SMTP
         /// </summary>
@@ -506,7 +510,7 @@ namespace Sendpulse_rest_api
         /// </summary>
         /// <param name="sp"></param>
         /// <param name="id"></param>
-        static void getpushCampaignInfo(Sendpulse sp,int id)
+        static void getpushCampaignInfo(Sendpulse sp, int id)
         {
             Dictionary<string, object> result = sp.pushCampaignInfo(id);
             Console.WriteLine("Response Status {0}", result["http_code"]);
@@ -556,7 +560,7 @@ namespace Sendpulse_rest_api
         /// <param name="siteId"></param>
         /// <param name="limit"></param>
         /// <param name="offset"></param>
-        static void pushListWebsiteSubscriptions(Sendpulse sp, int siteId,int limit, int offset)
+        static void pushListWebsiteSubscriptions(Sendpulse sp, int siteId, int limit, int offset)
         {
             Dictionary<string, object> result = sp.pushListWebsiteSubscriptions(siteId, limit, offset);
             Console.WriteLine("Response Status {0}", result["http_code"]);
@@ -581,7 +585,7 @@ namespace Sendpulse_rest_api
         /// <param name="sp"></param>
         /// <param name="siteId"></param>
         /// <param name="state"></param>
-        static void pushSetSubscriptionState(Sendpulse sp,int siteId,int state)
+        static void pushSetSubscriptionState(Sendpulse sp, int siteId, int state)
         {
             Dictionary<string, object> result = sp.pushSetSubscriptionState(siteId, state);
             Console.WriteLine("Response Status {0}", result["http_code"]);
@@ -598,7 +602,7 @@ namespace Sendpulse_rest_api
             Dictionary<string, object> data = new Dictionary<string, object>();
             Dictionary<string, object> additionaldata = new Dictionary<string, object>();
             data.Add("title", "test push");
-            data.Add("website_id", siteId); 
+            data.Add("website_id", siteId);
             data.Add("body", "test push body");
             data.Add("ttl", 300);
             additionaldata.Add("filter_browser", "Chrome");

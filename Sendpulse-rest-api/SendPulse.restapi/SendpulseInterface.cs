@@ -21,12 +21,15 @@ namespace Sendpulse_rest_api.restapi
         /// <param name="id"></param>
         /// <returns></returns>
         Dictionary<string, object> getBookInfo(int id);
+
         /// <summary>
         /// Get list pf emails from book
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="id">Book id</param>
+        /// <param name="limit">Number of records to be fetched</param>
+        /// <param name="offset">Position of first record to be fetched</param>
         /// <returns></returns>
-        Dictionary<string, object> getEmailsFromBook(int id);
+        Dictionary<string, object> getEmailsFromBook(int id, int limit, int offset);
         /// <summary>
         /// Remove address book
         /// </summary>

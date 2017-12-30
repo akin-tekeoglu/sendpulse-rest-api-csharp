@@ -9,7 +9,7 @@ using System.Web;
 
 namespace Sendpulse_rest_api.restapi
 {
-    class Sendpulse :SendpulseInterface
+    class Sendpulse : SendpulseInterface
     {
         private string apiurl = "https://api.sendpulse.com";
         private string userId = null;
@@ -26,8 +26,10 @@ namespace Sendpulse_rest_api.restapi
             this.userId = _userId;
             this.secret = _secret;
             this.tokenName = md5(this.userId + "::" + this.secret);
-            if (this.tokenName != null) {
-                if (!this.getToken()) {
+            if (this.tokenName != null)
+            {
+                if (!this.getToken())
+                {
                     Console.WriteLine("Could not connect to api, check your ID and SECRET");
                 }
             }
@@ -59,23 +61,26 @@ namespace Sendpulse_rest_api.restapi
         /// <param name="data"><string, object> data</param>
         /// <param name="useToken">Boolean useToken</param>
         /// <returns>Dictionary<string, object> result data</returns>
-        public Dictionary<string, object> sendRequest(string path, string method, Dictionary<string, object> data , bool useToken = true)
+        public Dictionary<string, object> sendRequest(string path, string method, Dictionary<string, object> data, bool useToken = true)
         {
             string strReturn = null;
             Dictionary<string, object> response = new Dictionary<string, object>();
-            try {
+            try
+            {
                 string stringdata = "";
-                if(data!=null && data.Count>0)
+                if (data != null && data.Count > 0)
                     stringdata = this.makeRequestString(data);
                 method = method.ToUpper();
-                if (method == "GET" && stringdata.Length>0) {
+                if (method == "GET" && stringdata.Length > 0)
+                {
                     path = path + "?" + stringdata;
                 }
-                HttpWebRequest WebReq = (HttpWebRequest)WebRequest.Create(this.apiurl+"/"+path);
+                HttpWebRequest WebReq = (HttpWebRequest)WebRequest.Create(this.apiurl + "/" + path);
                 WebReq.Method = method;
-                if(useToken && this.tokenName!=null)
+                if (useToken && this.tokenName != null)
                     WebReq.Headers.Add("Authorization", "Bearer " + this.tokenName);
-                if (method != "GET") {
+                if (method != "GET")
+                {
                     byte[] buffer = Encoding.ASCII.GetBytes(stringdata);
                     WebReq.ContentType = "application/x-www-form-urlencoded";
                     WebReq.ContentLength = buffer.Length;
@@ -131,7 +136,7 @@ namespace Sendpulse_rest_api.restapi
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
-              
+
             }
             return response;
         }
@@ -145,9 +150,9 @@ namespace Sendpulse_rest_api.restapi
             string requeststring = "";
             foreach (var item in data)
             {
-                if (requeststring.Length != 0) requeststring = requeststring+"&";
-                requeststring= requeststring+ HttpUtility.UrlEncode(item.Key, Encoding.UTF8) +"="+ HttpUtility.UrlEncode(item.Value.ToString(), Encoding.UTF8);
-                
+                if (requeststring.Length != 0) requeststring = requeststring + "&";
+                requeststring = requeststring + HttpUtility.UrlEncode(item.Key, Encoding.UTF8) + "=" + HttpUtility.UrlEncode(item.Value.ToString(), Encoding.UTF8);
+
             }
             return requeststring;
         }
@@ -172,7 +177,8 @@ namespace Sendpulse_rest_api.restapi
                 return false;
             this.refreshToken = 0;
             JObject jdata = (JObject)requestResult["data"];
-            if (jdata.GetType() == typeof(JObject)){
+            if (jdata.GetType() == typeof(JObject))
+            {
                 this.tokenName = jdata["access_token"].ToString();
             }
             return true;
@@ -182,8 +188,9 @@ namespace Sendpulse_rest_api.restapi
         /// </summary>
         /// <param name="data">Dictionary<string, object> data</param>
         /// <returns>Dictionary<string, object> data</returns>
-        private Dictionary<string, object> handleResult(Dictionary<string, object> data) {
-            if (!data.ContainsKey("data") || data.Count==0)
+        private Dictionary<string, object> handleResult(Dictionary<string, object> data)
+        {
+            if (!data.ContainsKey("data") || data.Count == 0)
             {
                 data.Add("data", null);
             }
@@ -243,18 +250,21 @@ namespace Sendpulse_rest_api.restapi
             catch (IOException) { }
             return this.handleResult(result);
         }
+
         /// <summary>
         /// Get list emails from book
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="id">Book id</param>
+        /// <param name="limit">Number of records to be fetched (max=100,default=0)</param>
+        /// <param name="offset">Position of first record to be fetched (default=0)</param>
         /// <returns></returns>
-        public Dictionary<string, object> getEmailsFromBook(int id)
+        public Dictionary<string, object> getEmailsFromBook(int id, int limit = 0, int offset = 0)
         {
             if (id <= 0) return this.handleError("Empty book id");
             Dictionary<string, object> result = null;
             try
             {
-                result = this.sendRequest("addressbooks/" + id + "/emails", "GET", null);
+                result = this.sendRequest("addressbooks/" + id + "/emails?limit=" + limit + "&offset=" + offset, "GET", null);
             }
             catch (IOException) { }
             return this.handleResult(result);
@@ -461,7 +471,7 @@ namespace Sendpulse_rest_api.restapi
         /// <param name="send_date"></param>
         /// <param name="attachments"></param>
         /// <returns></returns>
-        public Dictionary<string, object> createCampaign(string senderName, string senderEmail, string subject, string body, int bookId, string name,string send_date="", string attachments="")
+        public Dictionary<string, object> createCampaign(string senderName, string senderEmail, string subject, string body, int bookId, string name, string send_date = "", string attachments = "")
         {
             if (senderName.Length == 0 || senderEmail.Length == 0 || subject.Length == 0 || body.Length == 0 || bookId <= 0)
                 return this.handleError("Not all data.");
@@ -906,12 +916,13 @@ namespace Sendpulse_rest_api.restapi
                 }
                 catch (IOException) { }
                 return this.handleResult(result);
-            }else
+            }
+            else
             {
                 return this.handleError("No such push campaign");
             }
         }
-        
+
         /// <summary>
         /// Get amount of websites
         /// </summary>
